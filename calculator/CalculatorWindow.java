@@ -55,16 +55,16 @@ public class CalculatorWindow extends JFrame {
 		JButton[] buttons = new JButton[24];
 
 		String[] text = { "%", "CE", "C", " ",
-				"1/X", "X²", "√x", "÷",
-				"7", "8", "9", "x",
+				"1/x", "x²", "√x", "÷",
+				"7", "8", "9","x",
 				"4", "5", "6", "-",
-				"7", "8","9", "+",
+				"1", "2", "3", "+",
 				"-/+", "0", ".", "=" };
 		String[] values = { "%", " ", " ", "clear",
 				"1/", "pow(x,2)", "sqrt", "/",
-				"7", "8", "9", "*", 
+				"7", "8", "9","*", 
 				"4", "5", "6","-",
-				"7", "8", "9", "+",
+				"1", "2", "3","+",
 				"-/+", "0", ".", "=" };
 		HashMap<String, String> map = new HashMap<String, String>();
 		//初始按钮
