@@ -46,7 +46,7 @@ public class DonationInfoServiceImpl extends ServiceImpl<DonationInfoMapper, Don
         List<RespDonationInfoVo> respDonationInfo = donationInfoMapper.getDonationInfo(donationInfoVo);
         for(RespDonationInfoVo donationInfo : respDonationInfo){
             donationInfo.setTime(donationInfo.getCreateTime().plusDays(3));
-            donationInfo.setDonateNum(donationInfo.getId().toString());
+            donationInfo.setDonateNum(donationInfo.getDonateNum());
         }
         System.out.println(respDonationInfo);
         System.out.println(donationInfoVo);

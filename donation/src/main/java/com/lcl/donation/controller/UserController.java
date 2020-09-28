@@ -17,6 +17,8 @@ import com.lcl.donation.service.vo.request.RequestUserVo;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -29,6 +31,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -42,6 +45,8 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
     private Producer producer;
     //获取验证码接口：
     @GetMapping("captcha.jpg")
@@ -53,12 +58,12 @@ public class UserController {
         String text = producer.createText();
         //得到验证码图片
         BufferedImage image = producer.createImage(text);
-        HttpSession session = request.getSession();
-        session.setAttribute(Constants.KAPTCHA_SESSION_KEY,text);
-        //设置过期时间60s
-        session.setMaxInactiveInterval(60);
+        //保存到 redis
+        ValueOperations forValue = redisTemplate.opsForValue();
+        forValue.set(Constants.KAPTCHA_SESSION_KEY,text);
+        redisTemplate.expire(Constants.KAPTCHA_SESSION_KEY, 60, TimeUnit. SECONDS);
         ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(image,"jpg",out);
+        ImageIO.write(image, "jpg", out);
         IOUtils.closeQuietly(out);
     }
     @Autowired
@@ -70,7 +75,9 @@ public class UserController {
         String password = requestLoginVo.getPassword();
         String captcha = requestLoginVo.getCaptcha();
         password = Md5Utils.hash(password);
-        String kaptcha = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        // 通过redis获取验证码
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        String kaptcha = (String) valueOperations.get(Constants.KAPTCHA_SESSION_KEY);
         if(kaptcha.equalsIgnoreCase(captcha)){
 //            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
 //            userQueryWrapper.eq("telephone",telephone).eq("password",password);

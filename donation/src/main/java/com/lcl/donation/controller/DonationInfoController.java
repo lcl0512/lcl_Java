@@ -2,6 +2,7 @@ package com.lcl.donation.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.lcl.donation.common.Result;
 import com.lcl.donation.entity.DonationInfo;
 import com.lcl.donation.entity.DonationProject;
@@ -56,7 +57,7 @@ public class DonationInfoController {
         donationInfo.setCreateTime(LocalDateTime.now());
         donationInfo.setProjectName(donationProject.getProjectName());
         donationInfo.setProjectDesc(donationProject.getProjectDesc());
-
+        donationInfo.setDonateNum(IdWorker.getId()+"");
         if(donationInfoService.save(donationInfo)){
             if(donationInfoService.addDonateInfo(requestDonateVo.getItemListVos(),donationInfo.getId())){
                 return Result.getSuccess().setMsg("捐献成功");

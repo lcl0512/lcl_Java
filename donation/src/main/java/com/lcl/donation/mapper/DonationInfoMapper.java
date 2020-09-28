@@ -25,7 +25,7 @@ import java.util.List;
 public interface DonationInfoMapper extends BaseMapper<DonationInfo> {
     //多表操作
     @Select({"<script>" +
-            "select  donation_info.type,donation_project.project_name,donation_info.create_time,donation_info.status,donation_info.id,donation_info.user_id,project_id,donation_project.project_desc,donation_project.project_status,donation_info.donor,company_info.company_name "+
+            "select  donation_info.type,donation_info.donate_num,donation_project.project_name,donation_info.create_time,donation_info.status,donation_info.id,donation_info.user_id,project_id,donation_project.project_desc,donation_project.project_status,donation_info.donor,company_info.company_name "+
             "from donation_info,donation_project,company_info where 1=1 "+
             " and donation_info.project_id=donation_project.id "+
             " and donation_project.company_id = company_info.id "+
