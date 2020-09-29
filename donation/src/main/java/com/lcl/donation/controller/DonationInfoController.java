@@ -68,13 +68,14 @@ public class DonationInfoController {
     }
     @PostMapping("/checkDonation")
     public Result checkDonation(@RequestBody RequestCheckDonation resVo){
+        DonationInfo donationInfo = donationInfoService.getById(resVo.getId());
         if(resVo.getCheckStatus()){
-            DonationInfo donationInfo = donationInfoService.getById(resVo.getId());
             donationInfo.setStatus(1);
             donationInfoService.saveOrUpdate(donationInfo);
             return Result.getSuccess().setMsg("批准捐献");
         }else {
-            donationInfoService.removeDonation(resVo.getId());
+            donationInfo.setStatus(2);
+            donationInfoService.saveOrUpdate(donationInfo);
             return Result.getSuccess().setMsg("不批准");
         }
     }
